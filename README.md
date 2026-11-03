@@ -22,3 +22,7 @@ The repository was organized on 2026-11-03 by robot and project, then expanded w
 An untouched snapshot of the original file layout is preserved on branch `backup/original-layout-2026-11-03`, in addition to Git commit history.
 
 The desktop upload snapshot before this second reorganization is preserved on branch `backup/before-desktop-organization-2026-11-03`.
+
+## Review scope
+
+The current project-by-project review starts with [MG400 pen writing](MG400/pen-writing/). The [MG400 grid pick-and-place website](MG400/grid-pick-and-place-website/) is a **separate lesson/course project** and is intentionally excluded from the personal robot-code review for now; its uploaded files remain preserved and organized.
