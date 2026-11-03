@@ -1,7 +1,9 @@
-# Shared xArm drawing website — source inventory
+# xArm 850 shared LAN drawing website — recovered desktop package
 
-Files present in the original upload: `README.md`, `app.js`, `index.html`. A `qrcode_docs.google.com.png` reference image was also present and is archived under `reference-assets/` (its origin/association has not been verified).
+The initial upload contained only `README.md`, `app.js`, and `index.html`. The later desktop upload supplied **`server.py`, `START_WEBSITE.bat`, `START_WITH_ACCESS_CODE.bat`, `styles.css`, and two `drawings/*.json` files**. These are now alongside the original frontend, forming the server package described in the supplied README.
 
-**Missing from upload:** `server.py`, `START_WEBSITE.bat`, `START_WITH_ACCESS_CODE.bat`, and the runtime `drawings/` storage folder referred to by the README. The folder cannot be treated as a complete runnable distribution until the missing host code is recovered.
+The three identical frontend files from the desktop copy have been preserved under `alternate-upload-copies/desktop-2026-11-03/` to retain the complete upload provenance. The original `qrcode_docs.google.com.png` is under `reference-assets/`; its relevance is unverified.
 
-The website editor is associated with xArm drawing but the browser front end does not directly control the robot.
+The website does not command the robot. Students save `xarm850-freehand-v1` drawing JSON, which is imported separately by a compatible freehand drawing desktop app. The HTTP Basic-password option is unsuitable for exposure to public networks.
+
+**Runtime has not been tested** after relocating the package. Confirm port, firewall and paths when running.

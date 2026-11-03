@@ -7,3 +7,5 @@
 - `archive-compiled/`: historical bytecode, not required at runtime.
 
 Run the app from this folder with `python mg400_writer_app.py` after checking physical setup and configuration.
+
+- `alternate-upload-copies/desktop-2026-11-03/`: second desktop upload of the same unmodified writer core and GUI plus its one-line README. The core and GUI are **byte-identical** to those in this directory.
