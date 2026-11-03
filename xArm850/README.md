@@ -9,6 +9,6 @@
 | [controller-tests](controller-tests/) | Early controller/joint and pose-reading scripts |
 | [motion-tests](motion-tests/) | Connection and jog experiments |
 | [mister-bean-demo](mister-bean-demo/) | Standalone preprogrammed Mister Bean presentation demo |
-| [shared-drawing-website](shared-drawing-website/) | Browser-based drawing editor sources (the uploaded server/launch files are missing) |
+| [shared-drawing-website](shared-drawing-website/) | LAN drawing website: server, launch scripts, HTML/CSS/JS and saved JSON drawings (recovered from desktop) |
 
 These names refer to the same physical robot family. The script filenames use both `xarm` and `uf850`.
