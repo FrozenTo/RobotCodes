@@ -1,5 +1,7 @@
 # MG400 grid pick-and-place assembly website
 
+> **Project context:** This is a separate robotics lesson/course project, not part of the main historical MG400 writer/drawer work. It remains archived and organized here, but is excluded from the current personal-project version review.
+
 The site drives a **Dobot MG400** to pick and place components at grid positions, with per-cell measured Z heights and two camera panels. It is intended for AtomS3R assembly.
 
 - [v1.8](v1.8/): complete uploaded Flask package; `server.py`, `START_WEBSITE.bat`, `requirements.txt`, `config.json`, `data/cells.json`, HTML template and JS/CSS assets.
