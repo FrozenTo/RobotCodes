@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MG400 Grid Control</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>MG400 Grid Control</h1>
+      <p>10 × 5 working grid · 42 mm pitch · safe Z <strong id="safeZLabel">−100</strong> mm</p>
+    </div>
+    <div class="status-strip">
+      <span class="pill neutral" id="robotPill">Robot: checking…</span>
+      <span class="pill neutral" id="busyPill">Idle</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="card grid-card">
+      <div class="card-title-row">
+        <div>
+          <h2>Working grid</h2>
+          <p>A → J = left → right · 1 → 5 = far → near robot</p>
+        </div>
+        <div class="robot-side">MG400 ↑</div>
+      </div>
+
+      <div class="grid-wrap">
+        <div class="grid-axis letters" id="lettersAxis"></div>
+        <div class="grid-with-rows">
+          <div class="row-axis" id="rowAxis"></div>
+          <div class="grid" id="grid"></div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <span><i class="dot verified"></i> usable</span>
+        <span><i class="dot blocked"></i> blocked</span>
+        <span><i class="dot selected"></i> selected</span>
+        <span><i class="dot from"></i> FROM</span>
+        <span><i class="dot to"></i> TO</span>
+      </div>
+    </section>
+
+    <section class="card cameras-card">
+      <div class="card-title-row">
+        <div>
+          <h2>Cameras</h2>
+          <p>Tool close-up + overhead view of the whole work area.</p>
+        </div>
+      </div>
+      <div class="dual-cameras">
+        <div class="camera-pane">
+          <div class="camera-pane-title"><div><strong>Tool camera</strong><small>XIAO ESP32S3 Sense · suction/detail view</small></div><button class="secondary small" id="reloadCamera">Reload</button></div>
+          <div class="camera-frame">
+            <img id="cameraImage" alt="XIAO camera stream">
+            <div class="crosshair"><span></span><span></span></div>
+            <div class="camera-empty" id="cameraEmpty">Set the XIAO camera address in Settings.</div>
+          </div>
+          <div class="camera-hint">Crosshair is visual only for now; later it can be calibrated to the suction-cup centre.</div>
+        </div>
+        <div class="camera-pane">
+          <div class="camera-pane-title"><div><strong>Table camera</strong><small>USB webcam on host PC · full grid/robot view</small></div><button class="secondary small" id="reloadUsbCamera">Reload</button></div>
+          <div class="camera-frame overhead">
+            <img id="usbCameraImage" alt="USB table camera stream">
+            <div class="camera-empty" id="usbCameraEmpty">USB camera not loaded.</div>
+          </div>
+          <div class="camera-hint">Connected to the computer running this website. Choose camera index in Settings.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card controls-card">
+      <h2>Robot controls</h2>
+      <div class="button-grid three">
+        <button id="enableBtn">Enable robot</button>
+        <button class="secondary" id="disableBtn">Disable robot</button>
+        <button class="danger" id="stopBtn">STOP</button>
+      </div>
+      <p class="warning">Software STOP is not an emergency stop. Keep the physical E-stop accessible.</p>
+
+      <div class="pose" id="posePanel">
+        <span>X <b>—</b></span><span>Y <b>—</b></span><span>Z <b>—</b></span><span>R <b>—</b></span>
+      </div>
+
+      <hr>
+      <h3>Selected cell</h3>
+      <div class="selected-line">
+        <strong id="selectedName">None</strong>
+        <span id="selectedXY">Select a grid cell</span>
+      </div>
+      <div class="button-grid three">
+        <button id="moveAboveBtn" disabled>Move above</button>
+        <button class="secondary" id="setFromBtn" disabled>Set FROM</button>
+        <button class="secondary" id="setToBtn" disabled>Set TO</button>
+      </div>
+      <div class="button-grid two">
+        <button id="pickBtn" disabled>Pick</button>
+        <button id="placeBtn" disabled>Place</button>
+      </div>
+
+      <div class="transfer-box">
+        <div><span>FROM</span><strong id="fromName">—</strong></div>
+        <div class="arrow">→</div>
+        <div><span>TO</span><strong id="toName">—</strong></div>
+        <button id="transferBtn" disabled>Transfer</button>
+      </div>
+
+      <hr>
+      <h3>Tool</h3>
+      <div class="button-grid three">
+        <button id="suctionOnBtn">Suction ON</button>
+        <button class="secondary" id="suctionOffBtn">Suction OFF</button>
+        <button class="secondary" id="blowBtn">Blow pulse</button>
+      </div>
+    </section>
+
+    <section class="card assembly-card">
+      <div class="card-title-row">
+        <div>
+          <h2>Assembly heights</h2>
+          <p>Measured suction-cup Z stages for the AtomS3R stack.</p>
+        </div>
+        <div class="robot-side">R <span id="assemblyRLabel">−50.18°</span></div>
+      </div>
+      <div class="height-presets">
+        <div class="height-preset">
+          <div><strong>1 · Glass</strong><small>Glass-only pickup</small></div>
+          <b id="glassZLabel">−150.21</b>
+          <div class="preset-actions"><button class="secondary small" id="glassToPick">Use for Pick</button><button class="secondary small" id="glassToPlace">Use for Place</button></div>
+        </div>
+        <div class="height-preset">
+          <div><strong>2 · Atom + glass</strong><small>Glass drop-off / combined pickup</small></div>
+          <b id="atomGlassZLabel">−140.59</b>
+          <div class="preset-actions"><button class="secondary small" id="atomGlassToPick">Use for Pick</button><button class="secondary small" id="atomGlassToPlace">Use for Place</button></div>
+        </div>
+        <div class="height-preset">
+          <div><strong>3 · Full AtomS3R</strong><small>Pickup and press-fit place use different Z values</small></div>
+          <div class="split-height"><span>Pick <b id="fullPickZLabel">−122.92</b></span><span>Place <b id="fullPlaceZLabel">−125.52</b></span></div>
+          <div class="preset-actions"><button class="secondary small" id="fullToPick">Use Pick −122.92</button><button class="secondary small" id="fullToPlace">Use Place −125.52</button></div>
+        </div>
+      </div>
+      <div class="note">Presets save the measured height to the selected cell immediately, so Pick/Place becomes available at once. You can still fine-tune that cell afterward.</div>
+    </section>
+
+    <section class="card editor-card">
+      <h2>Cell setup</h2>
+      <p>XY comes from the ideal grid. Heights are stored separately for each cell.</p>
+      <label>Label
+        <input id="cellLabel" placeholder="e.g. Glass input / Workstation">
+      </label>
+      <label>Station role
+        <select id="cellRole">
+          <option value="">Unassigned</option>
+          <option value="glass_input">Glass input</option>
+          <option value="atom_station">Atom station</option>
+          <option value="battery_station">Battery / lower-module station</option>
+          <option value="finished_output">Finished output</option>
+          <option value="reject_output">Reject output</option>
+          <option value="other">Other</option>
+        </select>
+      </label>
+      <div class="form-row">
+        <label>Pick Z (mm)
+          <input id="pickZ" type="number" step="0.1" placeholder="not set">
+        </label>
+        <label>Place Z (mm)
+          <input id="placeZ" type="number" step="0.1" placeholder="not set">
+        </label>
+      </div>
+      <label class="check"><input id="blockedCell" type="checkbox"> Block this cell</label>
+      <button id="saveCellBtn" disabled>Save cell</button>
+      <div class="note">Pick/Place refuse to run until the corresponding Z height is configured.</div>
+    </section>
+
+    <section class="card settings-card">
+      <h2>Settings</h2>
+      <div class="form-row">
+        <label>Robot IP
+          <input id="robotIp" type="text" inputmode="decimal" placeholder="192.168.1.6">
+        </label>
+        <label>Safe Z
+          <input id="safeZ" type="number" step="0.1">
+        </label>
+      </div>
+      <div class="form-row">
+        <label>Speed factor
+          <input id="speedFactor" type="number" min="1" max="100" step="1">
+        </label>
+        <label>Robot connection
+          <button type="button" class="secondary" id="testRobotBtn">Test connection</button>
+        </label>
+      </div>
+      <div class="connection-result" id="connectionResult">Not tested yet.</div>
+      <div class="form-row three-inputs">
+        <label>Pitch
+          <input id="gridPitch" type="number" step="0.01">
+        </label>
+        <label>X at row 1
+          <input id="gridX1" type="number" step="0.01">
+        </label>
+        <label>Y at column A
+          <input id="gridYA" type="number" step="0.01">
+        </label>
+      </div>
+      <label>XIAO camera address
+        <input id="cameraUrl" placeholder="e.g. http://192.168.4.1">
+      </label>
+      <div class="form-row">
+        <button type="button" class="secondary" id="testCameraBtn">Test camera</button>
+        <button type="button" class="secondary" id="openCameraBtn">Open XIAO controls</button>
+      </div>
+      <div class="connection-result" id="cameraResult">Enter the XIAO control-page address. The browser loads its stream directly; Test camera checks one still image.</div>
+      <hr>
+      <h3>Assembly height presets</h3>
+      <div class="form-row three-inputs">
+        <label>Glass Z
+          <input id="assemblyZGlass" type="number" step="0.01">
+        </label>
+        <label>Atom + glass Z
+          <input id="assemblyZAtomGlass" type="number" step="0.01">
+        </label>
+        <label>Full AtomS3R pickup Z
+          <input id="assemblyZFullPick" type="number" step="0.01">
+        </label>
+        <label>Full AtomS3R press/place Z
+          <input id="assemblyZFullPlace" type="number" step="0.01">
+        </label>
+      </div>
+      <label>Assembly R
+        <input id="assemblyR" type="number" step="0.01">
+      </label>
+      <div class="note">These are global measured presets. Cell-specific Pick/Place Z values can override them.</div>
+      <hr>
+      <h3>USB table camera</h3>
+      <div class="form-row three-inputs">
+        <label>Camera index
+          <input id="usbCameraIndex" type="number" min="0" max="10" step="1">
+        </label>
+        <label>Width
+          <input id="usbCameraWidth" type="number" min="320" max="3840" step="1">
+        </label>
+        <label>Height
+          <input id="usbCameraHeight" type="number" min="240" max="2160" step="1">
+        </label>
+      </div>
+      <div class="form-row">
+        <label>FPS
+          <input id="usbCameraFps" type="number" min="1" max="30" step="1">
+        </label>
+        <label>USB camera test
+          <button type="button" class="secondary" id="testUsbCameraBtn">Test USB camera</button>
+        </label>
+      </div>
+      <div class="connection-result" id="usbCameraResult">If the laptop camera appears instead of the external webcam, try index 1, then 2.</div>
+      <button id="saveSettingsBtn">Save settings</button>
+      <div class="note">This app always controls the real MG400. Speed factor is re-applied before every movement.</div>
+    </section>
+
+    <section class="card log-card">
+      <div class="card-title-row"><h2>Status / log</h2><button class="secondary small" id="clearLog">Clear</button></div>
+      <pre id="log"></pre>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

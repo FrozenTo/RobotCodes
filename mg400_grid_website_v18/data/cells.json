@@ -1,0 +1,40 @@
+{
+  "A1": {
+    "blocked": true,
+    "label": "",
+    "pick_z": null,
+    "place_z": null
+  },
+  "B1": {
+    "blocked": true,
+    "label": "",
+    "pick_z": null,
+    "place_z": null
+  },
+  "I1": {
+    "blocked": true,
+    "label": "",
+    "pick_z": null,
+    "place_z": null
+  },
+  "J1": {
+    "blocked": true,
+    "label": "",
+    "pick_z": null,
+    "place_z": null
+  },
+  "H2": {
+    "blocked": false,
+    "label": "",
+    "role": "",
+    "pick_z": -140.59,
+    "place_z": null
+  },
+  "F2": {
+    "blocked": false,
+    "label": "",
+    "role": "",
+    "pick_z": null,
+    "place_z": -125.52
+  }
+}
