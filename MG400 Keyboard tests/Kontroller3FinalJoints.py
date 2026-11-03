@@ -1,0 +1,740 @@
+import pygame
+import time
+
+from dobot_api import DobotApiDashboard, DobotApiMove
+
+
+# =========================================================
+# SETTINGS
+# =========================================================
+
+ROBOT_IP = "192.168.2.6"
+
+STICK_DEADZONE = 0.25
+TRIGGER_THRESHOLD = 0.5
+
+
+# Controller mapping
+LEFT_X = 0
+LEFT_Y = 1
+
+RIGHT_X = 2
+RIGHT_Y = 3
+
+L2_AXIS = 4
+R2_AXIS = 5
+
+BUTTON_A = 0
+BUTTON_B = 1
+BUTTON_X = 2
+BUTTON_Y = 3
+
+BUTTON_L1 = 4
+BUTTON_R1 = 5
+
+
+# =========================================================
+# SPEED BANDS
+# =========================================================
+
+SPEED_BANDS = [
+    (0.40, 10),
+    (0.60, 20),
+    (0.80, 35),
+    (0.95, 50),
+    (1.01, 70),
+]
+
+
+# =========================================================
+# ROBOT CONNECTION
+# =========================================================
+
+print("Connecting to MG400...")
+
+dashboard = DobotApiDashboard(
+    ROBOT_IP,
+    29999
+)
+
+move = DobotApiMove(
+    ROBOT_IP,
+    30003
+)
+
+print(
+    "ClearError:",
+    dashboard.ClearError()
+)
+
+time.sleep(1)
+
+print(
+    "EnableRobot:",
+    dashboard.EnableRobot()
+)
+
+time.sleep(0.5)
+
+
+# =========================================================
+# CONTROLLER
+# =========================================================
+
+pygame.init()
+pygame.joystick.init()
+
+if pygame.joystick.get_count() == 0:
+
+    print("No controller detected.")
+
+    try:
+        dashboard.DisableRobot()
+    except Exception:
+        pass
+
+    pygame.quit()
+    raise SystemExit
+
+
+controller = pygame.joystick.Joystick(0)
+controller.init()
+
+print()
+print("Controller:", controller.get_name())
+
+print()
+print("MG400 CONTROLLER ACTIVE")
+print("------------------------")
+
+print("XYZ MODE:")
+print("Right stick:")
+print("  Up       = X-")
+print("  Down     = X+")
+print("  Left     = Y-")
+print("  Right    = Y+")
+
+print()
+print("Left stick:")
+print("  Up       = Z+")
+print("  Down     = Z-")
+
+print()
+print("JOINT MODE:")
+print("Right stick:")
+print("  Up       = selected joint +")
+print("  Down     = selected joint -")
+
+print()
+print("R1         = XYZ / JOINT mode")
+print("L1         = Select J1 / J2 / J3 / J4")
+print()
+
+print("A          = STOP")
+print("B          = Disable robot")
+print("L2         = Toggle Tool 1")
+print("R2         = Toggle Tool 2")
+
+print()
+
+
+# =========================================================
+# STATE
+# =========================================================
+
+current_direction = None
+current_speed = None
+
+tool1_on = False
+tool2_on = False
+
+l2_was_pressed = False
+r2_was_pressed = False
+
+l1_was_pressed = False
+r1_was_pressed = False
+
+stop_latched = False
+
+running = True
+
+
+# Movement mode
+mode = "XYZ"
+
+selected_joint = 1
+
+
+# =========================================================
+# FUNCTIONS
+# =========================================================
+
+def stop_robot():
+
+    global current_direction
+
+    if current_direction is None:
+        return
+
+    try:
+        move.MoveJog()
+
+    except Exception as e:
+        print("STOP error:", e)
+
+    current_direction = None
+
+    print("STOP")
+
+
+def speed_from_magnitude(magnitude):
+
+    if magnitude < STICK_DEADZONE:
+        return 0
+
+    for upper_limit, speed in SPEED_BANDS:
+
+        if magnitude < upper_limit:
+            return speed
+
+    return 70
+
+
+def set_speed(speed):
+
+    global current_speed
+
+    if speed == current_speed:
+        return
+
+    try:
+
+        dashboard.SpeedFactor(speed)
+
+        current_speed = speed
+
+        print(f"Speed: {speed}%")
+
+    except Exception as e:
+
+        print("Speed error:", e)
+
+
+def start_jog(direction, magnitude):
+
+    global current_direction
+
+    speed = speed_from_magnitude(
+        magnitude
+    )
+
+    if speed == 0:
+
+        stop_robot()
+        return
+
+    set_speed(speed)
+
+    if direction == current_direction:
+        return
+
+    if current_direction is not None:
+
+        try:
+            move.MoveJog()
+
+        except Exception:
+            pass
+
+    try:
+
+        move.MoveJog(direction)
+
+        current_direction = direction
+
+        print(
+            f"Jog: {direction} "
+            f"(stick {magnitude:.2f})"
+        )
+
+    except Exception as e:
+
+        print("Jog error:", e)
+
+
+# =========================================================
+# TOOLS
+# =========================================================
+
+def set_tool1(state):
+
+    global tool1_on
+
+    try:
+
+        dashboard.DO(
+            1,
+            1 if state else 0
+        )
+
+        tool1_on = state
+
+        print(
+            "Tool 1:",
+            "ON" if state else "OFF"
+        )
+
+    except Exception as e:
+
+        print("Tool 1 error:", e)
+
+
+def set_tool2(state):
+
+    global tool2_on
+
+    try:
+
+        dashboard.DO(
+            2,
+            1 if state else 0
+        )
+
+        tool2_on = state
+
+        print(
+            "Tool 2:",
+            "ON" if state else "OFF"
+        )
+
+    except Exception as e:
+
+        print("Tool 2 error:", e)
+
+
+# =========================================================
+# XYZ MOVEMENT
+# =========================================================
+
+def get_xyz_movement():
+
+    right_x = controller.get_axis(
+        RIGHT_X
+    )
+
+    right_y = controller.get_axis(
+        RIGHT_Y
+    )
+
+    left_y = controller.get_axis(
+        LEFT_Y
+    )
+
+    candidates = []
+
+    # X
+    if abs(right_y) >= STICK_DEADZONE:
+
+        if right_y < 0:
+            candidates.append(
+                (abs(right_y), "X-")
+            )
+
+        else:
+            candidates.append(
+                (abs(right_y), "X+")
+            )
+
+    # Y
+    if abs(right_x) >= STICK_DEADZONE:
+
+        if right_x < 0:
+            candidates.append(
+                (abs(right_x), "Y-")
+            )
+
+        else:
+            candidates.append(
+                (abs(right_x), "Y+")
+            )
+
+    # Z
+    if abs(left_y) >= STICK_DEADZONE:
+
+        if left_y < 0:
+            candidates.append(
+                (abs(left_y), "Z+")
+            )
+
+        else:
+            candidates.append(
+                (abs(left_y), "Z-")
+            )
+
+    if not candidates:
+        return None, 0
+
+    candidates.sort(
+        reverse=True,
+        key=lambda item: item[0]
+    )
+
+    magnitude, direction = candidates[0]
+
+    return direction, magnitude
+
+
+# =========================================================
+# JOINT MOVEMENT
+# =========================================================
+
+def get_joint_movement():
+
+    right_x = controller.get_axis(RIGHT_X)
+    right_y = controller.get_axis(RIGHT_Y)
+
+    # J1 = horizontal rotation
+    if selected_joint == 1:
+
+        if abs(right_x) < STICK_DEADZONE:
+            return None, 0
+
+        magnitude = abs(right_x)
+
+        if right_x < 0:
+            direction = "J1-"
+        else:
+            direction = "J1+"
+
+        return direction, magnitude
+
+
+    # J2 = vertical stick, inverted
+    if selected_joint == 2:
+
+        if abs(right_y) < STICK_DEADZONE:
+            return None, 0
+
+        magnitude = abs(right_y)
+
+        if right_y < 0:
+            direction = "J2-"
+        else:
+            direction = "J2+"
+
+        return direction, magnitude
+
+
+    # J3 = vertical stick, inverted
+    if selected_joint == 3:
+
+        if abs(right_y) < STICK_DEADZONE:
+            return None, 0
+
+        magnitude = abs(right_y)
+
+        if right_y < 0:
+            direction = "J3-"
+        else:
+            direction = "J3+"
+
+        return direction, magnitude
+
+
+    # J4 = horizontal rotation
+    if selected_joint == 4:
+
+        if abs(right_x) < STICK_DEADZONE:
+            return None, 0
+
+        magnitude = abs(right_x)
+
+        if right_x < 0:
+            direction = "J4-"
+        else:
+            direction = "J4+"
+
+        return direction, magnitude
+
+    return None, 0
+
+
+# =========================================================
+# STICK CENTER CHECK
+# =========================================================
+
+def sticks_centered():
+
+    return (
+        abs(
+            controller.get_axis(
+                RIGHT_X
+            )
+        ) < STICK_DEADZONE
+
+        and
+
+        abs(
+            controller.get_axis(
+                RIGHT_Y
+            )
+        ) < STICK_DEADZONE
+
+        and
+
+        abs(
+            controller.get_axis(
+                LEFT_Y
+            )
+        ) < STICK_DEADZONE
+    )
+
+
+# =========================================================
+# MAIN LOOP
+# =========================================================
+
+try:
+
+    while running:
+
+        pygame.event.pump()
+
+        # =================================================
+        # A = STOP
+        # =================================================
+
+        if controller.get_button(
+            BUTTON_A
+        ):
+
+            stop_robot()
+
+            stop_latched = True
+
+
+        # =================================================
+        # B = DISABLE + EXIT
+        # =================================================
+
+        if controller.get_button(
+            BUTTON_B
+        ):
+
+            print("B -> Disable robot")
+
+            stop_robot()
+
+            set_tool1(False)
+            set_tool2(False)
+
+            dashboard.DisableRobot()
+
+            running = False
+
+            continue
+
+
+        # =================================================
+        # R1 = CHANGE MODE
+        # =================================================
+
+        r1_pressed = controller.get_button(
+            BUTTON_R1
+        )
+
+        if (
+            r1_pressed
+            and not r1_was_pressed
+        ):
+
+            stop_robot()
+
+            stop_latched = True
+
+            if mode == "XYZ":
+
+                mode = "JOINT"
+
+                print()
+                print("====================")
+                print("MODE: JOINT")
+                print(
+                    f"Selected joint: J{selected_joint}"
+                )
+                print("====================")
+                print()
+
+            else:
+
+                mode = "XYZ"
+
+                print()
+                print("====================")
+                print("MODE: XYZ")
+                print("====================")
+                print()
+
+        r1_was_pressed = r1_pressed
+
+
+        # =================================================
+        # L1 = SELECT JOINT
+        # =================================================
+
+        l1_pressed = controller.get_button(
+            BUTTON_L1
+        )
+
+        if (
+            l1_pressed
+            and not l1_was_pressed
+        ):
+
+            # Only relevant in Joint mode
+            if mode == "JOINT":
+
+                stop_robot()
+
+                stop_latched = True
+
+                selected_joint += 1
+
+                if selected_joint > 4:
+                    selected_joint = 1
+
+                print(
+                    f"Selected joint: "
+                    f"J{selected_joint}"
+                )
+
+        l1_was_pressed = l1_pressed
+
+
+        # =================================================
+        # STOP LATCH
+        # =================================================
+
+        if stop_latched:
+
+            if sticks_centered():
+
+                stop_latched = False
+
+        else:
+
+            # =============================================
+            # MOVEMENT
+            # =============================================
+
+            if mode == "XYZ":
+
+                direction, magnitude = (
+                    get_xyz_movement()
+                )
+
+            else:
+
+                direction, magnitude = (
+                    get_joint_movement()
+                )
+
+            if direction is None:
+
+                stop_robot()
+
+            else:
+
+                start_jog(
+                    direction,
+                    magnitude
+                )
+
+
+        # =================================================
+        # L2 = TOOL 1
+        # =================================================
+
+        l2_value = controller.get_axis(
+            L2_AXIS
+        )
+
+        l2_pressed = (
+            l2_value
+            > TRIGGER_THRESHOLD
+        )
+
+        if (
+            l2_pressed
+            and not l2_was_pressed
+        ):
+
+            set_tool1(
+                not tool1_on
+            )
+
+        l2_was_pressed = l2_pressed
+
+
+        # =================================================
+        # R2 = TOOL 2
+        # =================================================
+
+        r2_value = controller.get_axis(
+            R2_AXIS
+        )
+
+        r2_pressed = (
+            r2_value
+            > TRIGGER_THRESHOLD
+        )
+
+        if (
+            r2_pressed
+            and not r2_was_pressed
+        ):
+
+            set_tool2(
+                not tool2_on
+            )
+
+        r2_was_pressed = r2_pressed
+
+
+        # =================================================
+        # LOOP RATE
+        # =================================================
+
+        time.sleep(0.01)
+
+
+except KeyboardInterrupt:
+
+    print("\nKeyboard interrupt.")
+
+
+finally:
+
+    print("Stopping...")
+
+    try:
+        move.MoveJog()
+    except Exception:
+        pass
+
+    try:
+        dashboard.DO(1, 0)
+        dashboard.DO(2, 0)
+    except Exception:
+        pass
+
+    try:
+        dashboard.DisableRobot()
+    except Exception:
+        pass
+
+    pygame.quit()
+
+    print(
+        "Robot stopped and disabled."
+    )
