@@ -1,3 +1,22 @@
+# Archived v1.8 — configuration accuracy note (2026-11-04)
+
+> **Please read before operating the robot.** This is the original evolving v1.2–v1.8 README preserved for history. Several lower sections describe **earlier default settings** that do not match the `config.json` stored with this specific v1.8 package. **The code loads the JSON, not the prose defaults.**
+
+| Setting | Value in the archived `config.json` | Earlier text below |
+| --- | --- | --- |
+| `speed_factor` | **2.0** → `SpeedFactor(2)` (2%) | Says 20% |
+| `safe_z` | **−50.0 mm** | Says −100 mm |
+| `usb_camera_index` | **1** | Earlier sections suggest index 0 for initial setup |
+| `robot_ip` | `192.168.1.6` | Same |
+
+The software reapplies the configured speed immediately before each move; its speed fallback of 20 applies **only if the `speed_factor` key is missing**, which is not the case here.
+
+The **lesson rig** has a 7×10 Gridfinity board, described with **A–G depth and signed side positions** (e.g. `B-2`); the **website** uses a **10×5 A1…J5 working grid** and its own calibrated robot-space XY values. These cell names are **not interchangeable**.
+
+The website is a **local lab controller**, not the cloud message queue described by the separate Smart Solutions Lab 2 assignment. Complete course/background documentation and the reviewed project overview are in [the parent Grid Website README](../README.md). This note documents the archived state **without changing the JSON, server, GUI or original version-history notes below**.
+
+---
+
 
 ## v1.8 change
 - Full AtomS3R now has separate measured heights:
