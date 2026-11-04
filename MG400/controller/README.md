@@ -2,7 +2,7 @@
 
 **Robot:** Dobot MG400  
 **Project:** Live keyboard and Xbox-style gamepad jogging over TCP/IP  
-**Status:** Development history and source implementation reviewed; `FinalControllerAPP.py` is the most developed desktop application in this directory, but its exact last physical test state is not independently verified in this repository.  
+**Status:** **Working MG400 gamepad controller — author-confirmed**. The author recalls that `FinalControllerAPP.py` was **probably the last working MG400 controller version used**, although the exact last file/build has not been rechecked on the physical robot.  
 **Reviewed:** 2026-11-04
 
 ## Goal and history
@@ -94,7 +94,17 @@ These are dependency observations from the imports, not a tested installation pr
 
 **Primary application candidate:** `FinalControllerAPP.py` plus `dobot_api.py`. It is the most complete controller GUI in this repository by inspected functionality. The console prototypes, the earlier `ControllerAPP.py`, and the keyboard-only `KeyboardApp` serve distinct development-history roles.
 
-**Actual latest tested version:** to be confirmed against the author's memory. We know the development included actual MG400/gamepad testing, but the checked-in scripts alone do not prove that this exact file was the last build used.
+**Actual latest tested version:** **Probably `FinalControllerAPP.py`**, per the author's recollection. The MG400 controller was used successfully, and the author believes this was the last working build before switching to xArm. This is a first-hand historical recollection, not a new hardware test or exact build-hash verification.
+
+## Why development moved to xArm 850
+
+The author reports that the MG400 controller itself **worked**, but the live manual movement felt too restricted: it was especially frustrating when trying to move **two or more axes together** with the joystick. The MG400 controller apps ultimately selected **one active `MoveJog` direction at a time** (the most strongly deflected axis), so they could not deliver the fluid multi-axis controller response the author wanted.
+
+**Important distinction:** this is an observed limitation of the real-time **jogging workflow/API usage and controller design**, not proof that the MG400 robot can never execute a coordinated multi-axis `MovJ` or `MovL` trajectory. Earlier experiments with queued relative movement also did not give the desired responsive held-stick control.
+
+**Reason for moving to xArm/UF850:** after reaching an acceptable final MG400 controller, the author moved on to the **xArm 850 controller project** specifically to pursue smoother, more natural **simultaneous multi-axis joystick movement**. The switch was motivated by the MG400's practical manual-control limits, rather than the final application simply being broken.
+
+The xArm development branch should be reviewed with this goal in mind. This entry records the motivation, **not** a claim that a specific xArm version already achieved perfect multi-axis control.
 
 **Next possible improvements (not applied):** more robust controller-command result validation, verified initial-pose feedback, a clearance-aware move-to-initial route, and a clear separation of software Stop from physical E-Stop instructions.
 
