@@ -8,3 +8,7 @@ Draw paths in a Tkinter canvas and save/load `xarm850-freehand-v1` JSON stroke f
 - `example-drawings/`: `my_xarm_drawing.json` and `mister_bean_color_compatible.json`. These are **drawing data**, not robot calibration settings. Load them through the app's drawing-file picker.
 
 The two saved settings JSONs contain different robot movement/calibration choices. They were not merged or overwritten.
+
+## Recovered drawing JSON files (2026-11-04)
+
+Three additional historical example drawings are preserved without edits under [`example-drawings/recovered-2026-11-04/`](example-drawings/recovered-2026-11-04/): `xarm_drawing.json`, `xarm_drawing (2).json`, and `xarm_drawing (3).json`. These were among the 33 files missing from the first GitHub upload; they are **drawing data**, not paper calibration or robot settings. The complete original folder remains at repository root.
