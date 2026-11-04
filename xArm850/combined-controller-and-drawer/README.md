@@ -17,6 +17,16 @@ The checked-in **v3 combined app** retains the tuned **0.15 deadzone**, **80 mm/
 
 The full history and controller button map are documented in [xArm controller-tests README](../controller-tests/).
 
+## A3 marker contact, rack, and later five-point geometry
+
+The **v3 combined app in this folder** still uses the **eight-point interpolated paper surface** derived from the xArm SVG/freehand experiments, with a user-adjustable **X contact offset**. This reflects an **A3 sheet on a wall**, but its saved `PAPER_WIDTH_MM=359.6` and `PAPER_HEIGHT_MM=235.0` define a **reachable calibrated drawing region**, not the full A3 page. The author reports that contact was extremely sensitive: changing marker grip position could require roughly **0.1 mm adjustments**. An offset set too far from the wall could prevent drawing; too deep into the wall could **crush the marker**. The checked-in v3 package does **not** automatically measure or regulate force.
+
+**Later development, not present in this GitHub folder:** a project version named `xarm_850_combined_controller_drawer_v4_5point_calibration.py` introduced a **five-point model for the usable A3 area**, with a clipped **unreachable upper-right region**. This differs from the v3 eight-point surface in both point layout and reachable region. Do not describe the saved v3 code as five-point.
+
+A later **3D-printed marker pickup rack** included a physical backstop/alignment wall to make marker projection repeatable when the robot picked up or returned a marker. The author reports that separate pickup/return tests worked, and that after settling on the rack-based arrangement **no further manual X recalibration was needed**. That does **not** eliminate the underlying possibility of damage if the offset is entered incorrectly; the latest setup simply became more repeatable. It also does not prove the full unarchived integrated app's automated pickup/return buttons were physically validated end-to-end.
+
+**Archive boundary:** none of the checked-in combined v1/v2/v3 programs contain the complete later five-point calibration and marker-rack workflow. Its real code and calibration settings must be archived as a distinct version when available. See [xArm SVG drawing README](../svg-and-text-drawing/) for the earlier four-/eight-point history.
+
 ## Settings verification (2026-11-03)
 The v3 source explicitly defines `SETTINGS_FILE = "xarm_combined_settings.json"`, locates it using `Path(__file__).resolve().with_name(...)`, and ignores a missing file (using built-in defaults). Saving settings writes the combined JSON beside the v3 Python file.
 
