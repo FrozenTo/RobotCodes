@@ -15,6 +15,6 @@ These freehand variants descend from the **eight measured edge-point** wall cali
 
 The author reports that an error of **around 0.1 mm could noticeably affect contact**: too far from the paper means no mark; too much inward X can press and **crush a marker against the wall**. The software has no automatic contact-force sensing.
 
-The **later five-point calibration** for an unreachable upper-right paper region, and a **3D-printed marker pickup rack with a physical alignment stop**, belong to newer combined xArm work; **these archived standalone freehand versions still use the eight-point model**. The author says the later rack made insertion repeatable enough that no further X-offset recalibration was necessary. Do not rewrite earlier JSON calibration values to make them match the later setup.
+The **later five-point calibration** for an unreachable upper-right paper region, and a **3D-printed marker pickup rack with a physical alignment stop**, belong to newer combined xArm work (including the user-named `xarm_850_full_app_normal_marker_speed.py`, not yet archived in GitHub); **these archived standalone freehand versions still use the eight-point model**. The author says the later rack made insertion repeatable enough that no further X-offset recalibration was necessary. Do not rewrite earlier JSON calibration values to make them match the later setup.
 
 See [SVG and Text Drawing](../svg-and-text-drawing/) and [Combined Controller and Drawer](../combined-controller-and-drawer/) for this progression.
