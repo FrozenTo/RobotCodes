@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="363.547mm"
+     height="246.885mm"
+     viewBox="0 0 363.547 246.885">
+  <!--
+    xArm 850 five-point calibration perimeter test.
+
+    Intended app settings:
+      Top margin: 10.34 mm
+      Max width:  363.55 mm
+      Max height: 246.89 mm
+
+    With the current SVG loader, this traces approximately 10 mm inside
+    the calibrated reachable boundary, including the clipped upper-right edge.
+  -->
+  <path d="M 0.000,0.000 L 0.000,246.885 L 363.547,246.885 L 360.966,45.875 L 275.247,9.196 L 0.000,0.000"
+        fill="none"
+        stroke="#000000"
+        stroke-width="1"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+</svg>
