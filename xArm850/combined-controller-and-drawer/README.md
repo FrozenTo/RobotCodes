@@ -1,5 +1,8 @@
 # xArm integrated controller + wall drawer
 
+**Upload recovery 2026-11-04:** The original upload had accidentally omitted later versions. This folder now also contains [five-point calibration versions v4/v6/v7](five-point-development/), three SVG reach tests, the [four full marker-changing app variants and their original settings JSON](full-marker-app/), and a slightly different early combined source under `alternate-upload-copies/recovered-2026-11-04/`. The original raw 74-file folder is retained separately. [Full SHA-verified recovery map](../../RECOVERED_UPLOAD_MAP_2026-11-04.md). **The v3 package below is no longer the newest recovered code**, and these later applications should be reviewed individually before claiming the final hardware status.
+
+
 - `xarm_850_combined_controller_drawer.py` and `_v2.py`: earlier integrated apps.
 - `xarm_combined_settings.json`: preserved from the same folder as those earlier versions.
 - `v3-package/`: v3 GUI plus its launcher, requirements and README; copied as a unit.
