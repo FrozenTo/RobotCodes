@@ -7,6 +7,16 @@
 
 **Important:** The v3 source uses a `xarm_combined_settings.json` filename at runtime, but this settings file was *not* present inside the original v3 distribution folder. The older JSON has not been silently substituted because calibration settings may differ.
 
+## Controller movement history — verified tuning and residual high-speed pause
+
+The combined app's joystick controller grew out of the standalone [xArm controller experiments](../controller-tests/). In those early experiments, the author observed **severe straight-axis jitter/jumping while diagonal movement looked smooth**. In the project chat on **2026-10-13**, the team changed **velocity timeout 0.15→0.50 s**, **deadzone 0.10→0.15**, configured **TCP maximum acceleration 400 mm/s²**, and introduced **velocity smoothing 0.25**. The author then reported movement was **“very smooth and nice.”** The original jittery *pre-fix* script is not separately identified in the archive; the changes were made together, so no single setting can be identified as the sole cause.
+
+The checked-in **v3 combined app** retains the tuned **0.15 deadzone**, **80 mm/s maximum TCP speed**, **400 mm/s² TCP acceleration**, **0.5 s velocity timeout**, and **0.25 smoothing** as initial controller constants. The actual values at runtime may be modified by the GUI's settings persistence.
+
+**Author observation about a later/current combined controller version:** Normal-speed XYZ movement is very smooth. At **higher speeds**, there can be a **small momentary pause associated with J4 repositioning** before the requested direction continues. The pause is barely noticeable and is **not the severe jitter from the original controller**. Whether this is caused by wrist reconfiguration, an IK solution transition, the robot's internal motion planner or another mechanism **has not been established from code or diagnostics**. This account does not prove the exact saved v3 package was the particular build used for that observation.
+
+The full history and controller button map are documented in [xArm controller-tests README](../controller-tests/).
+
 ## Settings verification (2026-11-03)
 The v3 source explicitly defines `SETTINGS_FILE = "xarm_combined_settings.json"`, locates it using `Path(__file__).resolve().with_name(...)`, and ignores a missing file (using built-in defaults). Saving settings writes the combined JSON beside the v3 Python file.
 

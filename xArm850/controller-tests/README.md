@@ -2,7 +2,7 @@
 
 **Robot:** UFACTORY xArm 850 / UF850  
 **Project goal:** Responsive **multi-axis controller-driven** movement unavailable in the author's MG400 `MoveJog` workflow  
-**Review:** Source reviewed 2026-11-04; physical test outcome of each exact file is not independently verified.  
+**Review:** Source and first-hand test history reviewed 2026-11-04. **The xArm joystick's straight-line jitter was author-confirmed fixed after settings adjustments.** Individual file/build hashes and complete physical tests of every feature are not independently verified.  
 **Most developed file in this folder:** `XARM_ContJoint.py`. The later [combined controller and drawing application](../combined-controller-and-drawer/) is a separate, more substantial project to review next.
 
 ## Why this followed MG400
@@ -22,6 +22,29 @@ These source files were once stored inside an MG400 keyboard-control upload desp
 | `XARM_ContJoint.py` | Expanded gamepad control | Retains continuous combined XYZ, adds **R1 XYZ/JOINT mode**, **L1 selected J1–J4**, right-stick joint jogging and D-pad J5/J6. Also adds joint-velocity smoothing, stop/recenter/fault latching and mode-switch handling. |
 
 The second controller is a **functional expansion**, not simply a filename variation. It does **not** replace or include the separate wall-lettering, SVG or freehand editors.
+
+## Confirmed original jitter problem and fix — 13 October 2026
+
+The author recalls an **earlier xArm controller build with very jumpy, jittery movement when traveling along one axis**, even though **diagonal or combined-axis motion looked smooth**. The related project chat was found under **“MG400 Keyboard Control App”** (xArm controller development on **2026-10-13**), not the earlier **“Adapt MG400 Writing App”** discussion.
+
+The motion tuning changes recorded in that discussion were:
+
+| Controller setting | Earlier value/state | Changed value |
+| --- | --- | --- |
+| Velocity command duration/timeout | **0.15 s** | **0.50 s** |
+| Analog stick deadzone | **0.10** (10%) | **0.15** (15%) |
+| TCP maximum acceleration | Not explicitly configured in that early code | **400 mm/s²**, applied with `arm.set_tcp_maxacc(...)` |
+| Cartesian velocity smoothing | Not explicitly configured in that early code | **0.25** (per-update smoothing factor) |
+
+**Test result:** after using those changes, the author replied **“Nice, now it's very smooth and nice.”** This is **first-hand confirmation that the combined tuning resolved the original visible jitter**. The four adjustments were applied together, so it is **not experimentally established which single change was responsible**. A longer command timeout and smoothed input are plausible contributors, but should not be presented as a proven isolated root cause.
+
+The saved **`XARM_Controller1.py` already contains all four tuned values**, as does `XARM_ContJoint.py`. The jittery *pre-fix* source is **not separately identified** in this repository and should **not** be inferred to be identical to the surviving `XARM_Controller1.py` file. The tuned values are preserved unchanged.
+
+### Minor high-speed behavior noticed later
+
+The author additionally reports that the **latest combined xArm controller** normally moves smoothly, but when jogging at **higher speeds**, motion can **briefly pause while J4 changes position**, after which movement continues. At normal or slower speeds the adjustment appears seamless; even at high speed the interruption is small. This is an **observed behavior**, not a diagnosed SDK bug or proof of the exact internal reason for the pause (e.g. an inverse-kinematics or controller reorientation event). Avoid claiming that the issue was present in every early script.
+
+This is a **minor remaining limitation**, not a recurrence of the severe early straight-axis jitter.
 
 ## How simultaneous XYZ movement works
 
@@ -47,7 +70,7 @@ arm.vc_set_cartesian_velocity(
 
 At full deflection, the source caps the combined XYZ velocity magnitude to `MAX_TCP_SPEED=80` mm/s, rather than permitting faster diagonal motion by simply summing axes. It uses a **15% deadzone**, **50 Hz / 0.02 s input polling**, smoothing factor `0.25`, and **0.5-second velocity command duration**. The 0.5-second duration is a command timeout if updates stop, **not a guarantee of an instantaneous hardware emergency stop**.
 
-This explicitly addresses the simultaneous Cartesian motion goal in **implementation**. Individual physical smoothness and reach tests were not verified in this documentation pass.
+This explicitly addresses the simultaneous Cartesian motion goal in **implementation**, and the author **confirmed smooth controller movement after the October 13 tuning changes**. That confirmation does not establish that every feature, reachable pose or individual archived file was separately validated.
 
 ## Joint control in XARM_ContJoint.py
 
@@ -110,6 +133,6 @@ python XARM_ContJoint.py
 - [Combined Controller + Drawer](../combined-controller-and-drawer/) later integrates gamepad control with wall writing, imported SVG and freehand drawing. It is **not yet established here** which combined GUI version was the latest physically confirmed working build.
 - [MG400 Controller](../../MG400/controller/) is the predecessor whose single-axis jogging limitation motivated this xArm work.
 
-**Catalog status:** `XARM_ContJoint.py` is the **most feature-complete early controller prototype in this folder**, with **source-confirmed simultaneous Cartesian XYZ**, **selected joint** manual control and **G2** commands. Physical success of every feature and the exact chronological order of individual revisions remain uncertain; do not equate source completeness with full hardware validation.
+**Catalog status:** `XARM_ContJoint.py` is the **most feature-complete early controller prototype in this folder**, with **source-confirmed simultaneous Cartesian XYZ**, **selected joint** manual control and **G2** commands. The original severe straight-axis jitter **was fixed in live use**; physical success of every other feature and the exact chronological order of archived revisions remain uncertain. Do not equate source completeness with full hardware validation.
 
 **No source code, motion constants, calibration settings, or gripper parameters were changed in this review.**
