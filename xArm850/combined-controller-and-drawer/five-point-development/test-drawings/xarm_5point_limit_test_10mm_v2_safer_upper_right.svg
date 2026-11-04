@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="363.013mm"
+     height="246.477mm"
+     viewBox="0 0 363.013 246.477">
+  <!--
+    xArm 850 revised five-point reach-limit test.
+    Uses the new safe TR-top and TR-bottom points.
+    The path is approximately 10 mm inside the calibrated polygon.
+  -->
+  <path d="M 0.000,0.000 L 252.540,18.233 L 351.304,64.005 L 363.013,246.477 L 0.000,246.477 L 0.000,0.000"
+        fill="none"
+        stroke="#000000"
+        stroke-width="1"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+</svg>
