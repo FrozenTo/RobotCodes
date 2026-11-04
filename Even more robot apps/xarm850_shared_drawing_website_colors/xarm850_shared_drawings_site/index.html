@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101b2f">
+  <title>xArm Studio — Shared Drawing Board</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand"><div class="logo">✳</div><div><strong>xArm Studio</strong><small>Shared drawing board</small></div></div>
+    <div class="header-info"><span class="status-dot"></span><span id="connectionStatus">Connecting…</span><span class="info-divider"></span><span id="paperSize">360 × 235 mm</span></div>
+  </header>
+  <main class="layout">
+    <section class="workspace">
+      <div class="workspace-header">
+        <div><div class="eyebrow">DRAWING EDITOR</div><h1>Create a drawing for the robot</h1><p>Every line you draw becomes a pen movement, not a traced PNG outline.</p></div>
+        <div class="file-actions"><button id="newBtn" class="btn secondary">New</button><button id="importBtn" class="btn secondary">Import JSON</button><button id="downloadBtn" class="btn secondary">Download JSON</button></div>
+      </div>
+      <div class="tools" role="toolbar" aria-label="Drawing tools">
+        <button class="tool active" data-tool="pen" title="Freehand stroke (P)">✎ <span>Pen</span></button>
+        <button class="tool" data-tool="line" title="Straight line (L)">╱ <span>Line</span></button>
+        <button class="tool" data-tool="rectangle" title="Rectangle (R)">▱ <span>Rectangle</span></button>
+        <button class="tool" data-tool="ellipse" title="Ellipse (E)">◯ <span>Ellipse</span></button>
+        <button class="tool" data-tool="erase" title="Remove a whole stroke">⌫ <span>Erase stroke</span></button>
+        <span class="tool-separator"></span>
+        <button id="undoBtn" class="tool quiet" title="Undo (Ctrl+Z)">↶ <span>Undo</span></button>
+        <button id="redoBtn" class="tool quiet" title="Redo (Ctrl+Y)">↷ <span>Redo</span></button>
+        <button id="clearBtn" class="tool quiet" title="Clear canvas">× <span>Clear</span></button>
+      </div>
+      <div class="color-bar" aria-label="Marker color">
+        <div class="color-bar-label">
+          <span>Marker color</span>
+          <strong id="selectedColorName">Black</strong>
+        </div>
+        <div id="colorPalette" class="color-palette" role="radiogroup" aria-label="Fiorello Sketch marker colors"></div>
+      </div>
+      <div class="drawing-shell">
+        <div class="paper-top"><span><span class="red-dot"></span> Paper preview</span><span id="canvasStats">0 strokes</span></div>
+        <div class="paper-wrap"><canvas id="paper" aria-label="Robot paper drawing canvas"></canvas></div>
+        <div class="paper-bottom"><span>The dashed boundary is the <strong>12 mm safety margin</strong>.</span><span>Pen lifts automatically between strokes.</span></div>
+      </div>
+      <div class="save-bar">
+        <div class="name-area"><label for="drawingName">Drawing name</label><input id="drawingName" maxlength="90" value="My drawing" autocomplete="off" placeholder="e.g. Robot dog"></div>
+        <div class="name-area author-area"><label for="authorName">Created by (optional)</label><input id="authorName" maxlength="60" autocomplete="off" placeholder="e.g. Anna"></div>
+        <button id="saveNewBtn" class="btn primary">Save as new drawing</button>
+        <button id="updateBtn" class="btn secondary" disabled>Save changes</button>
+      </div>
+      <div class="feedback" id="feedback" aria-live="polite">Your drawings stay on the server PC after you save them.</div>
+    </section>
+    <aside class="side-panel">
+      <div class="gallery-title"><div><div class="eyebrow">SAVED ON THIS PC</div><h2>Drawing gallery</h2></div><button id="refreshBtn" class="icon-btn" title="Refresh gallery">↻</button></div>
+      <p class="gallery-caption">Anyone with access to this site can open saved drawings. They can edit and save a new version too.</p>
+      <div class="search-wrap"><input id="search" placeholder="Search drawings…" aria-label="Search drawings"></div>
+      <div class="gallery-list" id="gallery"><p class="empty">Loading drawings…</p></div>
+      <div class="panel-note"><strong>How to draw with xArm</strong><ol><li>Save your drawing here.</li><li>Download its JSON on the robot PC.</li><li>Open the JSON in the xArm drawing app.</li><li>Preview and run the <strong>air test</strong> before drawing.</li></ol><p>This website never moves the robot.</p></div>
+    </aside>
+  </main>
+  <footer>LOCAL NETWORK EDITOR · Drawings stored on the server computer · xArm850 freehand v1</footer>
+  <input type="file" id="importFile" accept=".json,application/json" hidden>
+</body>
+</html>
