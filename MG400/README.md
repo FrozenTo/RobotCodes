@@ -2,7 +2,7 @@
 
 This folder collects the MG400 Python projects created and tested while learning to control a **Dobot MG400** over Ethernet. It includes successful applications, the experiments that led to them, and one separate course/lesson website project.
 
-**Review status as of 2026-11-04:** Four projects have detailed code/history reviews; **Slider Control is not yet reviewed**. The **Grid Pick-and-Place Website** is a separate lesson project intentionally excluded from the current personal-project review.
+**Review status as of 2026-11-04:** All **five personal/experimental MG400 project folders have been reviewed**. The **Grid Pick-and-Place Website** has also received detailed documentation based on the RoboticsLesson Lab 2 materials, but remains **a separate lesson project**, outside the main personal-project sequence.
 
 ## Project index
 
@@ -12,8 +12,8 @@ This folder collects the MG400 Python projects created and tested while learning
 | [Pen Calibration](pen-calibration/) | Experiments with a flexible 3D-printed off-axis pen holder, R-axis arc, reachable drawing area, and pen-tip compensation | **Reviewed — used experiments; imperfect drawing alignment accepted** |
 | [Image and SVG Drawing](image-and-svg-drawing/) | Progression from manually coded Narva College drawing paths to an Inkscape SVG importer with IK-aware R-angle planning | **Reviewed — manually traced SVG confirmed working very well** |
 | [Keyboard and Xbox Controller](controller/) | Keyboard jogging, gamepad input tests, speed control, selectable joint jogging, tool outputs and a PySide6 controller app | **Reviewed — working; `FinalControllerAPP.py` probably last used version** |
-| [Slider Control](slider-control/) | Tkinter XYZ slider control with a local Dobot Ethernet API module | **Pending detailed project review** |
-| [Grid Pick-and-Place Website](grid-pick-and-place-website/) | Web interface, cameras and grid-based component handling for an AtomS3R assembly exercise | **Separate lesson project — excluded from this review for now** |
+| [Slider Control](slider-control/) | Early Tkinter XYZ/R and joint-target sliders; movement only after a button press | **Reviewed — desired live slider-following was not implemented** |
+| [Grid Pick-and-Place Website](grid-pick-and-place-website/) | Local Flask Gridfinity pick/place site, two cameras and three assembly height tiers for Lab 2 | **Separately documented from lesson/source; full assembly test not verified** |
 
 Each project has its own README. For exact locations of files moved from the original uploads, see the repository root [file map](../FILE_MAP.md) and [desktop upload map](../DESKTOP_UPLOAD_MAP.md).
 
@@ -47,11 +47,19 @@ The reason for moving on to xArm 850 was **not that this MG400 application faile
 
 The next goal was therefore **more fluid simultaneous joystick control on xArm 850**. See [Keyboard and Xbox Controller](controller/) and the [xArm controller prototypes](../xArm850/controller-tests/).
 
-## Separate or pending work
+### 5. Slider Control — an early, incomplete real-time movement experiment
 
-**[Slider Control](slider-control/)** has its own source and short README but has **not yet received the same detailed comparison and usage-history review**. We should review it before declaring the full MG400 folder complete.
+[Slider Control](slider-control/) was an early Tkinter movement prototype inspired by a teacher's web interface in which changing sliders immediately moved a robot. The code provides XYZ/R and J1–J4 slider targets, live pose reads, Enable/Disable and move buttons, but **moving a slider does not move the robot automatically**: the intended real-time link was never implemented. The author remembers the project as **partly unsuccessful**, not a working live-follow controller. It remains useful as a preserved early stage of learning how to issue MG400 movement commands.
 
-**[Grid Pick-and-Place Website](grid-pick-and-place-website/)** is an independent **lesson/course project**, using a web UI, grid locations, cameras and heights for component assembly. It is preserved in GitHub but excluded from the main MG400 personal-project history for now.
+## Separate lesson project — documented, not merged into personal work
+
+**[Grid Pick-and-Place Website](grid-pick-and-place-website/)** supports a separate **3D Printing & CAD / Robotics Lab 2** exercise: a 7×10 physical Gridfinity rig, input/workstation/output holders, glass/Atom/battery assembly and two cameras. The archived **v1.8** website exposes a 10×5 **A1…J5** working grid for live robot moves, with different names from the teacher's **A–G and signed-number** physical model. The new detailed Grid Website README links directly to [FrozenTo/RoboticsLesson](https://github.com/FrozenTo/RoboticsLesson) and explains the assignment and implemented features.
+
+This course project **remains separate**. It is documented for continuity, but the entire assembly workflow and all course repeatability/camera tests have **not been confirmed complete**. No simulation or `LIVE_ROBOT=False` mode is added to the live site.
+
+## Completion of the MG400 review
+
+The five personal MG400 project areas — **Pen Writing, Pen Calibration, Image/SVG Drawing, Keyboard/Xbox Controller, and Slider Control** — now all have detailed source-based reviews. Grid Website documentation is also complete as a **separate course-context review**, not an assertion that its physical assembly task is finished. The next major robot in the historical project sequence is **xArm 850 / UF850**.
 
 ## Network, files and usage notes
 
