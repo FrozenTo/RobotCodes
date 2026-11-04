@@ -19,6 +19,14 @@ A key problem was how to bring the much larger arm to the writing area **without
 
 **Relationship to xArm controller:** This wall-writing pipeline uses planned position/joint movements, **not** the Xbox `vc_set_cartesian_velocity()` loop from the [controller prototypes](../controller-tests/). They become integrated in the [combined controller and drawing project](../combined-controller-and-drawer/).
 
+## Physical calibration clarification
+
+The author used an **A3 sheet** mounted on the wall. The `wall_x` value in the earliest program and the `paper_contact_x(y,z)` mapping in v2/v3 represent **paper-surface contact geometry**. Marker-tip length was a **separate variable**: removing and reinserting the marker changed how far the tip projected from the gripper, so later wall-drawing programs added an editable **X contact offset**.
+
+This was highly sensitive in practice. The author reports that **0.1 mm adjustments mattered**: too little negative X meant no marker contact, while too much could press the pen hard enough to **damage or crush it against the wall**. The standalone text writer's four-corner model and `air_draw` option do **not** provide automatic pressure/force control or prove a marker safely touches the page.
+
+Later xArm SVG/freehand/combined versions moved to **eight-point edge calibration**, then a still-later **five-point clipped accessible area** because the upper-right A3 region was unreachable. The author also added a **3D-printed marker rack with a physical stop**, giving reproducible marker insertion and eliminating the need for repeated X re-tuning in the latest working arrangement. **Those five-point/rack changes are not implemented in the standalone v3 text-writer files archived here**; see [SVG/Wall Drawing history](../svg-and-text-drawing/) and [combined app history](../combined-controller-and-drawer/).
+
 ## Source versions and actual differences
 
 The GUI and core are **paired by import**. Run the corresponding GUI with the matching writer module in the same folder.
