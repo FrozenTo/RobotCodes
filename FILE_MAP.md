@@ -1,6 +1,6 @@
 # File relocation map (2026-11-03)
 
-Every original tracked file is retained; its blob content and SHA are unchanged. This table maps original paths to their reorganized location. Two **extra** verbatim copies of `MG400 app/mg400_writer.py` were also placed in `MG400/image-and-svg-drawing/` and `MG400/pen-calibration/` to preserve local imports.
+This table records the **original 2026-11-03 relocation**; at that time each mapped file retained its exact original Git blob SHA. **Later README documentation reviews intentionally edited two mapped README destinations** (the shared-drawing website and Mister Bean demo). Original README byte copies are preserved separately; see [final audit](ARCHIVE_AUDIT_2026-11-05.md). All original **robot code** remains byte-identical. Two **extra** verbatim copies of `MG400 app/mg400_writer.py` were also placed in `MG400/image-and-svg-drawing/` and `MG400/pen-calibration/` to preserve local imports.
 
 | Original path | New path |
 | --- | --- |

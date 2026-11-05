@@ -1,6 +1,6 @@
 # Desktop file relocation map (2026-11-03)
 
-The second desktop upload added **26 files**. Every one of those 26 original file blobs remains accessible without changing its bytes; duplicate copies have been retained in marked `alternate-upload-copies/` directories. The old initial 100-file path map is [FILE_MAP.md](FILE_MAP.md).
+The second desktop upload added **26 files**. At original relocation, all 26 mapped file blobs were byte-identical. A **later documentation review** updated the mapped MG400 Grid v1.8 README, so the active README now has a different SHA. An unchanged original has been explicitly preserved in `MG400/grid-pick-and-place-website/v1.8/alternate-upload-copies/desktop-2026-11-03/README.md`; see the [final audit](ARCHIVE_AUDIT_2026-11-05.md). All original robot code and data remain unchanged. The old initial 100-file path map is [FILE_MAP.md](FILE_MAP.md).
 
 | Desktop-uploaded path | Organized path |
 | --- | --- |
