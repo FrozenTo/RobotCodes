@@ -329,3 +329,11 @@ The Mister Bean drawing is embedded directly in the program.
 - The author has reported prior successful marker pickup and return stages. The detailed README includes setup observations from development. The exact final state of this standalone demo and its current contact pressure are **not reverified** during documentation review.
 
 **No Python source, marker route coordinates, gripper pose or X offsets were changed in this review.**
+
+## Confirmed physical demo result (author update, 2026-11-05)
+
+The author has now explicitly confirmed that the **standalone Mister Bean demo completed fully and successfully on the physical xArm**, including pickup from the rack, both operator cap handoffs, drawing the embedded Mister Bean and replacing the marker in its holder. The source implementation should therefore be classified as a **physically successful demonstration**, not merely an untested planned sequence.
+
+The author also recalls that this demo used a **new marker** and its **−8.55 mm X contact offset** was its latest calibration at the time. That is a recollection of the marker configuration; it does **not** make −8.55 mm the universal setting for later markers or combined applications. In a different later full-app setup, the author measured **−12.3 mm** as appropriate. A further theory is that a missing settings JSON in the newer full app may have caused it to fall back to the older **−19.17 mm** Python default; that possible explanation is **not yet confirmed**.
+
+The demo itself embeds its offset and drawing and does **not** use the full-app settings JSON. This confirmation does not eliminate the need to recheck actual marker length and wall contact before a new live run.
