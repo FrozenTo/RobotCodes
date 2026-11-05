@@ -105,3 +105,53 @@ later can make older drawings incompatible unless imported and rescaled.
   terminal closes, the site is unavailable until restarted. Drawings remain on disk.
 - Do not use this as a public cloud service: it has no HTTPS, user accounts,
   quotas, anti-abuse protection or public-Internet security hardening.
+
+
+---
+
+## Archival source review — 2026-11-05
+
+**Purpose and outcome:** A student-friendly **shared drawing creation site**, not a robot controller. The author previously reported the website working on the local network; a later access problem was traced to using the **wrong host/IP instructions** and resolved after selecting the correct address. This report of use does **not** mean the archived package was freshly executed after reorganization. The earlier [`PROJECT_NOTES.md`](PROJECT_NOTES.md) explicitly records that relocation runtime was not retested.
+
+### What is in this project
+
+| File or folder | Function |
+| --- | --- |
+| [`server.py`](server.py) | **Python standard-library** `ThreadingHTTPServer`, serves local HTML/CSS/JS, validates JSON, manages gallery, revision checks and disk files |
+| [`index.html`](index.html) + [`styles.css`](styles.css) + [`app.js`](app.js) | The full browser UI: pen, line, rectangle, ellipse, erase-stroke, 12-color palette, undo/redo, new/import/download and shared gallery |
+| [`START_WEBSITE.bat`](START_WEBSITE.bat) | Windows launcher for the ordinary server on port **8765** |
+| [`START_WITH_ACCESS_CODE.bat`](START_WITH_ACCESS_CODE.bat) | Windows launcher that asks for a shared **HTTP Basic** access code |
+| [`drawings/`](drawings/) | Saved `xarm850-freehand-v1` vector drawing JSONs, persistent on the host PC |
+| [`alternate-upload-copies/desktop-2026-11-03/`](alternate-upload-copies/desktop-2026-11-03/) | Byte-identical copies of the frontend README, HTML and JavaScript, retained for upload history |
+| [`reference-assets/`](reference-assets/) | Historical QR-code image; no verified relationship to running the server |
+
+The site contains **no robot TCP commands**, no xArm SDK import and no hardware connection. The operator must explicitly **download/open a drawing in a separate xArm desktop program**, check actual calibrated wall contact and run it there. This distinction is important for student safety and the application architecture.
+
+### Original saved drawings
+
+Two drawings were recovered as part of the desktop package:
+
+| Preserved JSON | Strokes | Total raw points | Color metadata |
+| --- | ---: | ---: | --- |
+| [`1fa6257c6bb14905b551629d03d779c2.json`](drawings/1fa6257c6bb14905b551629d03d779c2.json) | **77** | **3,481** | Original black-only drawing, no palette metadata |
+| [`f35cc988a9254003920c73d7f710f66b.json`](drawings/f35cc988a9254003920c73d7f710f66b.json) | **3** | **85** | Original black-only drawing, no palette metadata |
+
+Both use `xarm850-freehand-v1` at **360 × 235 mm**, revision **1**. These are stored data samples, **not** evidence that either was physically drawn by the robot. Their stroke counts also match drawings recovered independently in [Freehand Drawing](../freehand-drawing/); do not conclude they are identical without a full geometry/content comparison.
+
+### Technical implementation details
+
+- **Canvas:** defaults to a logical **360 × 235 mm**, with a **12 mm margin**. These dimensions are a reachable drawing preset, **not the whole physical A3 sheet**. The current website margin check is rectangular; it does **not** know the later full app's **five-point clipped unreachable top-right polygon**. Robot-side reachability validation remains necessary.
+- **Fiorello palette:** 12 named marker colors; per-stroke color IDs persist in JSON. Old black-only strokes are interpreted as black. The website itself **does not** automatically change physical markers.
+- **Storage:** `POST /api/drawings` creates an ID-based JSON in `drawings/`; `PUT /api/drawings/<id>` requires a matching integer revision and rejects stale updates with **HTTP 409**. The server uses a thread lock and temporary-file replacement for reliable concurrent saves.
+- **Download:** strips site-specific name, author, revision and timestamps, preserving geometry and optional palette to import into a compatible desktop application.
+- **Validation:** maximum request **2,000,000 bytes**, **1,500 strokes**, **2,000 points per stroke**, **100,000 points total**; finite numeric coordinates, recognized shapes/color IDs and matching page dimensions/margins are required.
+- **Collaboration:** gallery, name and optional author are metadata only; **there is no ownership enforcement or per-user permissions**. Anyone who can access the site can edit another person's drawing. The gallery auto-refreshes about **every 25 seconds**.
+- **Port/network:** `--host` defaults to **0.0.0.0**, opening the server to reachable network peers, with port **8765** by default; actual access depends on firewall, Wi-Fi isolation and correct host IPv4 address. **The host PC IP is not the xArm's IP.**
+
+**Security note:** the optional access code is HTTP Basic over **unencrypted HTTP**, not secure encryption. The server is suitable only for a trusted/private LAN; **do not expose it to the public Internet**. There are no user accounts, account-level permissions, deletion controls, HTTPS or robust public-service protections.
+
+### Working status / future integration
+
+The author reported successful local-website use after fixing the IP mismatch. Browser editing and file storage are implemented; direct robot control is intentionally **not implemented**. The newer [full marker applications](../combined-controller-and-drawer/full-marker-app/) can load compatible saved drawing JSON and offer color-related workflows, but they still require separate calibration and supervised operation.
+
+**No Python, JavaScript, HTML, CSS, launch scripts, QR image or JSON drawing data changed during this documentation review.**
