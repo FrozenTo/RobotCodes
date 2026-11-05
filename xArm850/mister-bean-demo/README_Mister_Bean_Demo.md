@@ -258,9 +258,11 @@ The demo uses the current five-point calibrated drawing area.
 
 The upper-right corner of the drawing surface is intentionally treated as a restricted / clipped area because of the xArm reach limit.
 
-The demo uses the current marker X offset:
+The standalone demo Python source actually defines the marker X offset as:
 
-`-19.17 mm`
+`-8.55 mm`
+
+**Archive correction (2026-11-05):** An earlier edition of this README incorrectly said `-19.17 mm`. That value belongs to some **earlier combined full-app** defaults, not the checked-in standalone demo script. The later full-app upload separately contains a settings JSON with **`contact_offset = -12.3`**, which the author reports was the working paper-contact setting on that later fixture. These historical offsets are **not interchangeable**; no automatic contact-force sensor is present. Check the actual script and marker/rack setup before any live use.
 
 The embedded Mister Bean drawing has already been mapped to the calibrated area.
 
@@ -314,3 +316,16 @@ Only this file is required:
 `xarm_850_mister_bean_standalone_demo.py`
 
 The Mister Bean drawing is embedded directly in the program.
+
+
+---
+
+## Archival source verification (2026-11-05)
+
+- This README describes what the demo's **source is programmed to do**, including two operator cap prompts and a 10-stage automatic robot motion sequence. It does **not** independently establish that every move in this exact GitHub source was safely executed end-to-end on the present robot.
+- The source stores the **Mister Bean drawing inline** as `MISTER_BEAN_JSON` with **40 strokes and 408 raw points**, using format `xarm850-freehand-v1`, width **359.6 mm** and height **235 mm**. Its shape and points are **identical** to the separate [color-compatible Mister Bean example](../freehand-drawing/example-drawings/mister_bean_color_compatible.json), though that example adds `palette` and per-stroke `color` metadata. No external JSON is loaded at demo runtime.
+- The drawing paths are simplified and validated against the **five-point clipped reachable polygon** before robot connection; this is geometric validation, **not** a collision clearance or marker-force test.
+- The app uses Tkinter and the xArm Python SDK only. It does not import Pygame or need a game controller, SVG parser or local drawing file.
+- The author has reported prior successful marker pickup and return stages. The detailed README includes setup observations from development. The exact final state of this standalone demo and its current contact pressure are **not reverified** during documentation review.
+
+**No Python source, marker route coordinates, gripper pose or X offsets were changed in this review.**
