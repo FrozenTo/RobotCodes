@@ -2,6 +2,8 @@
 
 **Robot:** UFACTORY xArm 850 (UF850), used for vertical-wall drawing, manual Xbox control, and automated marker pickup/return. **Physical media:** A3 paper mounted on a wall; a 3D-printed marker-holder rack with locating stop was added in later projects. **Robot IP in saved scripts:** generally `192.168.1.208`.
 
+**Author confirmation (2026-11-05):** The standalone **Mister Bean demo was physically run to successful completion**, including pickup, two manual cap handoffs, drawing and return to its rack. It was not merely a source-implemented test.
+
 This is an **archive of developmental versions**, not a single fully validated deployment. The author confirmed successful text writing, hand-traced SVG drawing, smooth controller movement after tuning, standalone freehand v2.2, and marker-handling trials. Some later full-app operations remain source-implemented rather than verified end-to-end. Preserve each version's original marker/calibration coordinates instead of merging them.
 
 ## Project index
@@ -15,7 +17,7 @@ This is an **archive of developmental versions**, not a single fully validated d
 | [freehand-drawing](freehand-drawing/) | Tkinter paint-like editor, saved JSON drawings, unsafe early READY path and author-approved v2.2 | **Reviewed including recovered JSONs** |
 | [combined-controller-and-drawer](combined-controller-and-drawer/) | Integrated controller, SVG/text/freehand, eight-point then clipped five-point A3 calibration, marker/color automation | **Reviewed through later READY/headline revisions** |
 | [marker-handling-tests](marker-handling-tests/) | Eight isolated tests: rack pickup, transfer at Z≈520, wrist-compatible READY, handoff, return | **Reviewed** |
-| [mister-bean-demo](mister-bean-demo/) | Standalone embedded 40-stroke demo with G2 marker pickup, two manual cap handoffs, drawing and return | **Reviewed; demo X-offset documentation corrected** |
+| [mister-bean-demo](mister-bean-demo/) | Standalone embedded 40-stroke demo with G2 marker pickup, two manual cap handoffs, drawing and return | **Reviewed; author-confirmed complete successful physical demonstration** |
 | [shared-drawing-website](shared-drawing-website/) | Local PC-hosted collaborative color drawing website, gallery and `xarm850-freehand-v1` JSON export | **Reviewed; no direct robot connection** |
 
 ## Actual development progression
@@ -40,7 +42,7 @@ The [recovery map](../RECOVERED_UPLOAD_MAP_2026-11-04.md) documents the 33 files
 
 **No automatic contact-force control:** incorrect X can leave the marker floating or **crush it into the wall**. This remains an unsolved safety/quality limitation, even if the rack helps keep insertion consistent.
 
-**Offsets are historical, not interchangeable.** The author specifically confirmed **−12.3 mm** touches correctly with the later full-app marker/rack setup, while those Python files still define an older **−19.17 mm** default. A separately embedded [Mister Bean demo](mister-bean-demo/) instead defines **−8.55 mm**; its original README inaccurately claimed −19.17 and has been corrected. These are values for **different source/configuration states**, not a single universal standard.
+**Offsets are historical, not interchangeable.** The author specifically confirmed **−12.3 mm** touches correctly with the later full-app marker/rack setup, while those Python files still define an older **−19.17 mm** default. The author recalls that the [successfully completed Mister Bean demo](mister-bean-demo/) used a **new marker** with its own fixed **−8.55 mm** contact offset. Its original README inaccurately claimed −19.17 and has been corrected. The later full app **silently falls back to its Python default if the settings JSON is missing**; the author suspects a lost old JSON, but its role in the excessive-pressure incident remains unverified. These are distinct source/tool configurations, not a universal calibration.
 
 **A3 reachable area:** eight-point drawing versions use an estimated rectangular working envelope; later five-point versions clip the upper-right reach-limited region. Do not force a drawing into the unreachable area just because its JSON or SVG fits the site's default rectangular dimensions.
 
@@ -52,6 +54,6 @@ The [recovery map](../RECOVERED_UPLOAD_MAP_2026-11-04.md) documents the 33 files
 - **Source-implemented** means a function and planned path exist in the repository; **author-tested** records a reported hardware observation. Neither is a substitute for retesting a changed fixture.
 - For any live run, check actual robot/joint state, mounted marker, correct settings file, physical E-stop, full arm/rack/wall clearance, clipped reach polygon and calibrated contact X.
 - The **shared drawing website** is a separate LAN-only editor; students can't issue live xArm movement commands through it.
-- The **Mister Bean demo** is a standalone operator-assisted presentation; it is not the latest integrated full marker app.
+- The **Mister Bean demo** is a standalone operator-assisted presentation, **confirmed by the author to have completed successfully on the physical robot**; it is not the latest integrated full marker app.
 
 **xArm project-folder review complete as of 2026-11-05.** Individual future changes should be tracked in their own versions/README updates rather than overwriting this historical baseline.
