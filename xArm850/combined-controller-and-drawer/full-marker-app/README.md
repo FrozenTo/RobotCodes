@@ -104,3 +104,9 @@ The settings file does not certify the marker rack geometry or the current robot
 **Source-review conclusion:** The many iterations were **not** evidence that an xArm was inherently unable to move between ordinary poses. Some versions imposed restrictive *software gates*; the later full app instead **routed automatically**. Preserve the genuine A3 reachable-area, wrist branch and marker contact constraints.
 
 **No Python source, gripper/marker poses, tool offsets, speeds or settings JSON were modified during this review.**
+
+## Additional later READY-routing versions (uploaded 2026-11-05)
+
+The four full apps compared above **are no longer the last archived versions**. See [READY Routing Revisions](ready-routing-revisions/) for four newer scripts: `xarm_850_full_app_l3_routing_v2.py`, `xarm_850_full_app_l1_ready_r3_handoff.py`, `xarm_850_full_app_unified_safe_ready.py` and `xarm_850_full_app_safe_ready_heading_fix.py`, plus the **separate** matching settings JSON. In those later versions **L1 Go to READY is implemented**, the drawing and marker READY joint branches are unified, and the final uploaded script shifts headings that would be outside the clipped top boundary. This updates (but does not erase) the older-version summary above, where L1 was precision mode.
+
+**Crucial contact-offset distinction:** the latest uploaded JSON uses **−12.3 mm**, physically confirmed by the author to place the marker on paper correctly in the latest setup. The code's default is still **−19.17 mm**, nearly **6.87 mm more negative/toward the wall**, and cannot be used interchangeably. The user reported alarming excessive wall pressure during this development; the exact offending runtime offset remains unproven. The last script's “safe” filename is not a hardware safety guarantee. Original Python/JSON files unchanged. [Latest upload map](../../../XARM_LATEST_UPLOAD_MAP_2026-11-05.md).
