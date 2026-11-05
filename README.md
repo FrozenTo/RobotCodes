@@ -31,3 +31,7 @@ The current project-by-project review starts with [MG400 pen writing](MG400/pen-
 ## Upload completeness audit (2026-11-04)
 
 The original 100-file upload captured 59 files from other source folders and only 41 of 74 from `Even more robot apps`. The latter 74-file folder has now been re-uploaded intact and preserved at the repository root for independent verification. Its 33 previously omitted paths are documented in the recovery map. The four later full-marker-app versions, five-point calibration tests, marker rack/pickup experiments and preserved settings are now indexed under `xArm850/`. The original 41 match their re-uploaded SHA values, and no tracked originals were deleted by reorganization. File counts include duplicates and historical binary caches; they do not signify distinct working applications.
+
+## Latest xArm full-app upload (2026-11-05)
+
+Four later xArm full-marker-app Python revisions and their distinct settings JSON were uploaded at repository root and **copied by matching Git blob SHA** to [xArm READY-routing revisions](xArm850/combined-controller-and-drawer/full-marker-app/ready-routing-revisions/). The original root uploads are preserved. See the [five-file upload map](XARM_LATEST_UPLOAD_MAP_2026-11-05.md). The newer JSON's author-confirmed marker offset is **−12.3 mm** for that physical setup; earlier Python defaults of −19.17 mm must not be silently substituted.
