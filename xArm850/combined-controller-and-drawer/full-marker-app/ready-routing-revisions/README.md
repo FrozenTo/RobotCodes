@@ -1,6 +1,6 @@
 # xArm 850 — Later Full App READY Routing and Heading Fixes (2026-11-05)
 
-**Source:** Five original files uploaded by the author to the repository root, then copied here **byte-for-byte by their Git blob SHA**. The original five root-level files remain available for comparison. These scripts are later than the four [earlier full marker apps](../) and must **not** be confused with the separate [five-point v4/v6/v7 calibration experiments](../../five-point-development/).
+**Source:** Five original files uploaded by the author to the repository root, then copied here **byte-for-byte by their Git blob SHA**. The five redundant root-level copies were removed from the current repository on **2026-11-06**, leaving these as the canonical organized files. Their original root uploads are still available [at the pre-cleanup commit](https://github.com/FrozenTo/RobotCodes/tree/0134014726d9448b5afc9d1f69d85f94779cd855). These scripts are later than the four [earlier full marker apps](../) and must **not** be confused with the separate [five-point v4/v6/v7 calibration experiments](../../five-point-development/).
 
 **Working-status warning:** The user reports that READY movement may have regressed in one of these revisions and later been corrected, and that a marker at one point pressed worryingly far into the paper. **Neither the precise hardware test result for each new version nor the source-level cause of the overpressure has been established.** Treat these as archived iterative builds; no version is declared physically verified or inherently safe just because it is named “safe” or “fix.”
 
@@ -44,7 +44,7 @@ There is **no force or tactile contact feedback**. Even the confirmed −12.3 mm
 
 ## Integrity and safety
 
-- The four Python files and their settings JSON were **copied unchanged** into this project subfolder. The originals remain at the repository root.
+- The four Python files and their settings JSON were **copied unchanged** into this project subfolder. The originals are preserved in Git history; there are **no longer extra copies at the repository root**.
 - The latest filename `safe_ready_heading_fix` identifies the last **uploaded revision**, not independent certification that the marker pressing problem or all movement paths have been solved.
 - Keep the physical E-stop accessible, confirm actual robot TCP/joints, confirm contact X and holder geometry, and test pen-up waypoints before trying another wall-contact move.
 - The recovered marker rack scripts, test results and version history are documented in [Marker Handling Tests](../../../marker-handling-tests/).

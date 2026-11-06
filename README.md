@@ -62,10 +62,14 @@ No historical Python, JSON calibration, SVG artwork or robot-motion code was rew
 | [Initial upload map](FILE_MAP.md) | **100** paths from the original first GitHub upload |
 | [Desktop upload map](DESKTOP_UPLOAD_MAP.md) | **26** additional desktop-uploaded paths |
 | [Recovered upload map](RECOVERED_UPLOAD_MAP_2026-11-04.md) | **33** paths missing from the original 100-file upload, recovered by re-uploading the complete 74-file `Even more robot apps` folder |
-| [Latest xArm upload map](XARM_LATEST_UPLOAD_MAP_2026-11-05.md) | Four later full-app Python versions and one settings JSON, uploaded at repository root and copied to their project folder |
+| [Latest xArm upload map](XARM_LATEST_UPLOAD_MAP_2026-11-05.md) | Four later full-app Python versions and one settings JSON; originally uploaded at the repository root, **now stored only in their xArm project folder**, with the former root paths recoverable in Git history |
 | [Final archive integrity audit](ARCHIVE_AUDIT_2026-11-05.md) | Project index and Markdown-link checks, current file/duplicate counts, original READMEs kept versus actively revised READMEs |
 
 The original first-upload snapshot exists at [commit `228505c`](https://github.com/FrozenTo/RobotCodes/tree/228505cc98f67b9763884a343112d4a156ddf6a3) (branch `backup/original-layout-2026-11-03`). The before-desktop-reorganization snapshot is [commit `a5fc634`](https://github.com/FrozenTo/RobotCodes/tree/a5fc63477cf3fca7d861f8b1d802694f9dbc8956) (branch `backup/before-desktop-organization-2026-11-03`). **The first snapshot contained only 41 of the 74 files** eventually re-uploaded under `Even more robot apps/`; the complete raw folder is also preserved on `main`.
+
+### Root-level cleanup (2026-11-06)
+
+The five xArm READY-routing Python/JSON files uploaded at the root have been **moved into** [their correct full-marker-app subfolder](xArm850/combined-controller-and-drawer/full-marker-app/ready-routing-revisions/) and the redundant root copies removed. The organized versions retained exactly the original Git blob SHA, including the calibrated `−12.3 mm` settings file. Git history and the [original-upload map](XARM_LATEST_UPLOAD_MAP_2026-11-05.md) preserve where they were first uploaded; **the active repository root now contains navigation and archive documentation rather than loose xArm applications**. See the [audit addendum](ARCHIVE_AUDIT_2026-11-05.md#subsequent-root-cleanup-2026-11-06).
 
 ## Review status
 
